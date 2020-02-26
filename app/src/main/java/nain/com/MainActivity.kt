@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 // necesario para que funcione
@@ -13,6 +14,11 @@ import nain.com.PreferenceHelper.set
 // Fin
 
 class MainActivity : AppCompatActivity() {
+
+    // snackbar => by lazy => sino nos sale error cuando entramos al app lo cargamos de forma peresosa porque aun no a cargado el mainLayout
+    private val snackBar by lazy {
+        Snackbar.make(mainLayout, R.string.press_back_again, Snackbar.LENGTH_SHORT)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,5 +63,13 @@ class MainActivity : AppCompatActivity() {
 */
         val preferences = PreferenceHelper.defaultPrefs(this)
         preferences["session"] = true
+    }
+
+    // crtl + o => function para darle doble click cu8ando se cierra el app
+    override fun onBackPressed() {
+        if (snackBar.isShown)
+            super.onBackPressed()
+        else
+            snackBar.show()
     }
 }
