@@ -1,13 +1,12 @@
-package nain.com
+package nain.com.ui
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import kotlinx.android.synthetic.main.activity_create_appoinment.*
 import kotlinx.android.synthetic.main.activity_menu.*
+import nain.com.PreferenceHelper
 import nain.com.PreferenceHelper.set
+import nain.com.R
 
 class MenuActivity : AppCompatActivity() {
 

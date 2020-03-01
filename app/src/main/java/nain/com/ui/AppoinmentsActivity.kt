@@ -1,10 +1,10 @@
-package nain.com
+package nain.com.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_appoinments.*
+import nain.com.R
 import nain.com.model.Appointment
 
 class AppoinmentsActivity : AppCompatActivity() {

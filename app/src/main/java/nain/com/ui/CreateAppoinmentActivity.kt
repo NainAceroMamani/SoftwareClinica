@@ -1,21 +1,32 @@
-package nain.com
+package nain.com.ui
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.RadioButton
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_create_appoinment.*
 import kotlinx.android.synthetic.main.card_view_step_one.*
 import kotlinx.android.synthetic.main.card_view_step_three.*
 import kotlinx.android.synthetic.main.card_view_step_two.*
+import nain.com.R
+import nain.com.io.ApiService
+import nain.com.model.Doctor
+import nain.com.model.Specialty
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
+import kotlin.collections.ArrayList
 
 class CreateAppoinmentActivity : AppCompatActivity() {
+
+    // cargamos de manera perezosa => by lazy
+    val apiService: ApiService by lazy {
+        ApiService.create()
+    }
 
     private val selectedCalendar = Calendar.getInstance()
     private var selectedTimeRadioButton: RadioButton? = null
@@ -39,7 +50,8 @@ class CreateAppoinmentActivity : AppCompatActivity() {
                     etScheduledDate.error = getString(R.string.validate_appointment_date)
                 }
                 selectedTimeRadioButton == null -> {
-                    Snackbar.make(createAppointmentLinearLayout, R.string.validate_appointment_time, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(createAppointmentLinearLayout,
+                        R.string.validate_appointment_time, Snackbar.LENGTH_SHORT).show()
                 }
                 else -> {
                     showAppointmentDataToConfirm()
@@ -54,11 +66,90 @@ class CreateAppoinmentActivity : AppCompatActivity() {
             finish()
         }
 
-        val specialtyOptions = arrayOf("Specialty A", "Specialty B", "Specialty C")
-        spinerSpecialties.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, specialtyOptions)
+//        // Cargamos especialty
+//        val specialtyOptions = arrayOf("Specialty A", "Specialty B", "Specialty C")
+//        spinerSpecialties.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, specialtyOptions)
 
-        val doctorOptions = arrayOf("Specialty A", "Specialty B", "Specialty C")
-        spinerDoctors.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, doctorOptions)
+        // cargamos del api
+        loadSpecialties()
+        listenSpecialtyChanges()
+//
+//        val doctorOptions = arrayOf("Specialty A", "Specialty B", "Specialty C")
+//        spinerDoctors.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, doctorOptions)
+    }
+
+    private fun loadSpecialties() {
+        val call = apiService.getSpecialties()
+
+        // cargamos de forma asyncrona => enquene
+        call.enqueue(object: retrofit2.Callback<ArrayList<Specialty>> {
+
+            // funcion que ejecuta cuando exite un error
+            override fun onFailure(call: Call<ArrayList<Specialty>>, t: Throwable) {
+                Toast.makeText(this@CreateAppoinmentActivity, getString(R.string.error_loading_specialties), Toast.LENGTH_SHORT).show()
+                finish()
+            }
+
+            // function que se llama cuando se ejecuto correctamente
+            override fun onResponse(call: Call<ArrayList<Specialty>>, response: Response<ArrayList<Specialty>>) {
+                if(response.isSuccessful) { // 200..300
+                    val specialties = response.body()
+//
+//                    val specialtyOptions = ArrayList<String>()
+//                    specialties?.forEach {
+//                        specialtyOptions.add(it.name)
+//                    }
+                    // cuando estamos deltro de un object expresion this debe ser mas especifico
+                    // antes definir el metodo string del specialties para que muestre solo el name
+                    spinerSpecialties.adapter = specialties?.let {
+                        ArrayAdapter<Specialty>(this@CreateAppoinmentActivity, android.R.layout.simple_list_item_1, it
+                        )
+                    }
+                }
+            }
+        })
+    }
+
+    private fun listenSpecialtyChanges() {
+     // verificamos que si o si se tenga una especialidad seleccionada
+        spinerSpecialties.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            // si tenemos un item selecionado entra
+            override fun onItemSelected( adapter: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                // obtenemos el id del item seleccionado => adapter te devulve la info
+                val specialty = adapter?.getItemAtPosition(position) as Specialty
+                // Toast.makeText(this@CreateAppoinmentActivity, specialty.id, Toast.LENGTH_SHORT).show()
+                loadDoctors(specialty.id)
+            }
+
+        }
+    }
+
+    private fun loadDoctors(specialtyId: Int) {
+        val call = apiService.getDoctor(specialtyId)
+        call.enqueue(object: Callback<ArrayList<Doctor>> {
+            override fun onFailure(call: Call<ArrayList<Doctor>>, t: Throwable) {
+                Toast.makeText(this@CreateAppoinmentActivity, getString(R.string.error_loading_doctors), Toast.LENGTH_SHORT).show()
+                finish()
+            }
+
+            override fun onResponse(call: Call<ArrayList<Doctor>>, response: Response<ArrayList<Doctor>>
+            ) {
+                if(response.isSuccessful) { // 200..300
+                    val doctors = response.body()
+
+                    // antes definir el metodo string del doctor para que muestre solo el name
+                    spinerDoctors.adapter = doctors?.let {
+                        ArrayAdapter<Doctor>(this@CreateAppoinmentActivity, android.R.layout.simple_list_item_1, it)
+                    }
+                }
+            }
+
+        })
     }
 
     private fun showAppointmentDataToConfirm(){

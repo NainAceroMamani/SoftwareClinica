@@ -1,16 +1,18 @@
-package nain.com
+package nain.com.ui
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import nain.com.PreferenceHelper
 
 // necesario para que funcione
 import nain.com.PreferenceHelper.get
 import nain.com.PreferenceHelper.set
+import nain.com.R
+
 // Fin
 
 class MainActivity : AppCompatActivity() {
