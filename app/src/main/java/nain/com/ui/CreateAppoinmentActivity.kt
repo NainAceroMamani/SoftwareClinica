@@ -240,7 +240,8 @@ class CreateAppoinmentActivity : AppCompatActivity() {
                       y,
 //                    if(m <= 9) m.toString() else "0$m",
 //                    if(d <= 9) d.toString() else "0$d"
-                      m.twoDigits(),
+                      // m + 1 porque enero empieza en cero
+                      (m+1).twoDigits(),
                       d.twoDigits()
                 )
             )
