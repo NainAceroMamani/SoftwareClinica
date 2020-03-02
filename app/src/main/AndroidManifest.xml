@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="nain.com">
 
-    // permisos de internet para el api
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+<!--    permisos de internet para el api-->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"

@@ -3,6 +3,8 @@ package nain.com.ui
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +16,7 @@ import kotlinx.android.synthetic.main.card_view_step_two.*
 import nain.com.R
 import nain.com.io.ApiService
 import nain.com.model.Doctor
+import nain.com.model.Schedule
 import nain.com.model.Specialty
 import retrofit2.Call
 import retrofit2.Callback
@@ -73,16 +76,73 @@ class CreateAppoinmentActivity : AppCompatActivity() {
         // cargamos del api
         loadSpecialties()
         listenSpecialtyChanges()
+        listenDoctorAndDateChanges()
 //
 //        val doctorOptions = arrayOf("Specialty A", "Specialty B", "Specialty C")
 //        spinerDoctors.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, doctorOptions)
+    }
+
+    private fun listenDoctorAndDateChanges(){
+        // doctors
+        // verificamos que si o si se tenga un doctor seleccionada
+        spinerDoctors.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            // si tenemos un item selecionado entra
+            override fun onItemSelected( adapter: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                // obtenemos el id del item seleccionado => adapter te devulve la info
+                val doctor = adapter?.getItemAtPosition(position) as Doctor
+                // Toast.makeText(this@CreateAppoinmentActivity, specialty.id, Toast.LENGTH_SHORT).show()
+                loadHours(doctor.id, etScheduledDate.text.toString())
+            }
+
+        }
+        // scheduled date => cambio de fecha habra un cambio de hora
+        etScheduledDate.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            // caundo el texto cambie
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // para obtener el di del médico
+                val doctor = spinerDoctors.selectedItem as Doctor
+                loadHours(doctor.id, etScheduledDate.text.toString())
+            }
+
+        })
+    }
+
+    private fun loadHours(doctorId: Int, date: String){
+        val call = apiService.getHours(doctorId, date)
+        call.enqueue(object : Callback<Schedule> {
+            override fun onFailure(call: Call<Schedule>, t: Throwable) {
+                Toast.makeText(this@CreateAppoinmentActivity, getString(R.string.error_loading_hours), Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call<Schedule>, response: Response<Schedule>) {
+                if(response.isSuccessful){ // 200 .. 300
+                    val scheduled = response.body()
+                    Toast.makeText(this@CreateAppoinmentActivity, "morning: ${scheduled?.morning?.size}. afternoon: ${scheduled?.afternoon?.size}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        })
+        // Toast.makeText(this, "doctor : ${doctorId} , date: ${date}", Toast.LENGTH_SHORT).show()
     }
 
     private fun loadSpecialties() {
         val call = apiService.getSpecialties()
 
         // cargamos de forma asyncrona => enquene
-        call.enqueue(object: retrofit2.Callback<ArrayList<Specialty>> {
+        call.enqueue(object: Callback<ArrayList<Specialty>> {
 
             // funcion que ejecuta cuando exite un error
             override fun onFailure(call: Call<ArrayList<Specialty>>, t: Throwable) {
