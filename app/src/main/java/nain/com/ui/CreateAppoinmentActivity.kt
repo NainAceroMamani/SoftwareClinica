@@ -121,6 +121,9 @@ class CreateAppoinmentActivity : AppCompatActivity() {
     }
 
     private fun loadHours(doctorId: Int, date: String){
+        if(date.isEmpty()) {
+            return
+        }
         val call = apiService.getHours(doctorId, date)
         call.enqueue(object : Callback<Schedule> {
             override fun onFailure(call: Call<Schedule>, t: Throwable) {
@@ -130,7 +133,17 @@ class CreateAppoinmentActivity : AppCompatActivity() {
             override fun onResponse(call: Call<Schedule>, response: Response<Schedule>) {
                 if(response.isSuccessful){ // 200 .. 300
                     val scheduled = response.body()
-                    Toast.makeText(this@CreateAppoinmentActivity, "morning: ${scheduled?.morning?.size}. afternoon: ${scheduled?.afternoon?.size}", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this@CreateAppoinmentActivity, "morning: ${scheduled?.morning?.size}. afternoon: ${scheduled?.afternoon?.size}", Toast.LENGTH_SHORT).show()
+
+                    scheduled?.let {
+                        tvSelectedDoctorAndDate.visibility = View.GONE
+                        val intervals = it.morning + it.afternoon
+                        val hours = ArrayList<String>()
+                        intervals.forEach{ interval ->
+                            hours.add(interval.start)
+                        }
+                        displayIntervalRadios(hours)
+                    }
                 }
             }
 
@@ -219,6 +232,7 @@ class CreateAppoinmentActivity : AppCompatActivity() {
         val selectedRadioBtnId = radioGroupType.checkedRadioButtonId
         val selectedRadioType = radioGroupType.findViewById<RadioButton>(selectedRadioBtnId)
 
+        tvConfirmDoctorName.text = spinerDoctors.selectedItem.toString()
         tvConfirmType.text = selectedRadioType.text.toString()
         tvConfirmDate.text = etScheduledDate.text.toString()
         // selectedRadioButton?.text.toString() => lo controlamos a partior de la variable que creamos
@@ -247,7 +261,7 @@ class CreateAppoinmentActivity : AppCompatActivity() {
             )
             // le damos null al error para que se quite => por el focusable no se puede mostrar el mensaje
             etScheduledDate.error = null
-            displayRadioButtons()
+//            displayRadioButtons()
         }
 
         // new dialog
@@ -265,7 +279,7 @@ class CreateAppoinmentActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
-    private fun displayRadioButtons() {
+    private fun displayIntervalRadios(hours: ArrayList<String>) {
 //        radioGroup.clearCheck()
 //        radioGroup.removeAllViews()
         // Sin radioGroup mostrar en dos columnas
@@ -274,7 +288,14 @@ class CreateAppoinmentActivity : AppCompatActivity() {
         radioGroupLeft.removeAllViews()
         radioGroupRight.removeAllViews()
 
-        val hours = arrayOf("3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM")
+        if (hours.isEmpty()) {
+            tvNotAvailableHours.visibility = View.VISIBLE
+            return
+        }
+
+        tvNotAvailableHours.visibility = View.GONE
+
+//        val hours = arrayOf("3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM")
         var goToLeft = true
 
         hours.forEach {

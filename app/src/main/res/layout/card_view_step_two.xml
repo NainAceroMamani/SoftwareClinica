@@ -9,6 +9,7 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="8dp"
     android:visibility="gone"
+    tools:visibility="visible"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -49,6 +50,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <TextView
+                android:id="@+id/tvSelectedDoctorAndDate"
+                android:textColor="@color/colorAccent"
+                android:layout_margin="6dp"
+                android:text="@string/label_selected_doctor_and_Date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvNotAvailableHours"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_margin="6dp"
+                android:text="@string/label_not_available_hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,13 +81,17 @@
                     android:layout_marginBottom="8dp"
                     android:orientation="vertical">
                     <RadioButton
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="8:00 AM"/>
                     <RadioButton
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8:00 AM"/>
+                        android:text="9:00 AM"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -79,13 +102,17 @@
                     android:layout_marginBottom="8dp"
                     android:orientation="vertical">
                     <RadioButton
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8:00 AM"/>
+                        android:text="8:30 AM"/>
                     <RadioButton
+                        android:visibility="gone"
+                        tools:visibility="visible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8:00 AM"/>
+                        android:text="9:30 AM"/>
                 </LinearLayout>
 
             </LinearLayout>

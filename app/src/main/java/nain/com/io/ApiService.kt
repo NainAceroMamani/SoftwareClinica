@@ -1,5 +1,6 @@
 package nain.com.io
 
+import nain.com.io.response.LoginResponse
 import nain.com.model.Doctor
 import nain.com.model.Schedule
 import nain.com.model.Specialty
@@ -8,9 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
 
@@ -25,9 +24,16 @@ interface ApiService {
             // mo recifimos un array sino recifimos un objetos dentro dos arraylist los vamos a matear ahora
             : Call<Schedule>
 
+    @POST("login")
+    fun postLogin(@Query("email") email: String, @Query("password") password: String) // @Query es pra enviar parametros tipo post
+        : Call<LoginResponse>
+
+    @POST("logout")
+    fun postLogout(@Header("Authorization") authHeader: String): Call<Void> // Void pra ignorarlo la respuesta
+
     // companion para llavar sin la necesidad de factory
     companion object Factory {
-        private const val BASE_URL = "http://64.225.53.166/api/"
+        private const val BASE_URL = "http://192.168.0.13:8000/api/"
 
         fun create(): ApiService {
 //            Interceptor para saber las pediciones que esta haciendo la url

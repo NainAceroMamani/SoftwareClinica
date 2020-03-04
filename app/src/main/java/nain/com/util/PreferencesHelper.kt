@@ -1,11 +1,11 @@
-package nain.com
+package nain.com.util
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 
 /**
- * toda esta implementación es de un articulo
+ * toda esta implementación es de un articulo => Storage
  */
 
 object PreferenceHelper {
