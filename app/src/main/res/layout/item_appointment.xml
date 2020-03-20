@@ -23,7 +23,7 @@
             android:id="@+id/tvAppointmentsId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Coita médica #7"/>
+            tools:text="Citas médica #7"/>
 
         <TextView
             android:id="@+id/tvDoctorName"
@@ -46,6 +46,69 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             tools:text="A las 3:00 PM"/>
+
+        <!--FrameLayout para que se centre de acuerdo al padre-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                tools:text="Confirmada"/>
+
+            <ImageButton
+                android:id="@+id/ibExpand"
+                android:background="@color/white"
+                android:layout_margin="8dp"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_expand_more"
+                tools:src="@drawable/ic_expand_less"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutDetails"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvSpecialty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                tools:text="Oftalmología"/>
+
+            <TextView
+                android:id="@+id/tvType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                tools:text="Consulta"/>
+
+            <TextView
+                android:id="@+id/tvCreatedAt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal"
+                tools:text="Esta cita se registro el dia 2020-03-19 con la siguiente Descripción"/>
+
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_horizontal"
+                tools:text="Tengo dolor de cabeza"/>
+        </LinearLayout>
 
     </LinearLayout>
 

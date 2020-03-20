@@ -1,6 +1,7 @@
 package nain.com.io
 
 import nain.com.io.response.LoginResponse
+import nain.com.model.Appointment
 import nain.com.model.Doctor
 import nain.com.model.Schedule
 import nain.com.model.Specialty
@@ -25,15 +26,20 @@ interface ApiService {
             : Call<Schedule>
 
     @POST("login")
-    fun postLogin(@Query("email") email: String, @Query("password") password: String) // @Query es pra enviar parametros tipo post
+    fun postLogin(@Query("email") email: String, @Query("password") password: String) // @Query es para enviar parametros tipo post
         : Call<LoginResponse>
 
     @POST("logout")
     fun postLogout(@Header("Authorization") authHeader: String): Call<Void> // Void pra ignorarlo la respuesta
 
+    @GET("appointments")
+    fun postAppointments(@Header("Authorization") authHeader: String)
+            : Call<ArrayList<Appointment>> // Void pra ignorarlo la respuesta
+
+
     // companion para llavar sin la necesidad de factory
     companion object Factory {
-        private const val BASE_URL = "http://192.168.0.13:8000/api/"
+        private const val BASE_URL = "http://64.225.53.166/api/"
 
         fun create(): ApiService {
 //            Interceptor para saber las pediciones que esta haciendo la url
