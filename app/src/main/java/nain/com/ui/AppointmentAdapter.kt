@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import kotlinx.android.synthetic.main.item_appointment.view.*
 import nain.com.R
 import nain.com.model.Appointment
@@ -26,6 +28,9 @@ class AppointmentAdapter: RecyclerView.Adapter<AppointmentAdapter.ViewHolder>(){
             tvCreatedAt.text = context.getString(R.string.item_appointment_Created_At, appointment.createdAt)
 
             ibExpand.setOnClickListener{
+                // parent es el padre de la vista gracias al itemView podemos acceder mediante parent pero castearlo
+                TransitionManager.beginDelayedTransition(parent as ViewGroup, AutoTransition() )
+
                 if(linearLayoutDetails.visibility == View.VISIBLE) {
                     linearLayoutDetails.visibility = View.GONE
                     ibExpand.setImageResource(R.drawable.ic_expand_more)

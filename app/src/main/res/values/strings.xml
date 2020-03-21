@@ -53,4 +53,6 @@
     <string name="error_empty_credentials">Por favor ingrese un correo y contraseña</string>
     <string name="welcome_name">Bienvenido %1$s</string>
     <string name="item_appointment_Created_At">Esta cita se registro el dia %1$s con la siguiente Descripción</string>
+    <string name="create_appointment_success">Cita registrada correctamente</string>
+    <string name="create_appointment_error">Ocurrio un error en el regsro de cita médica</string>
 </resources>

@@ -46,7 +46,7 @@ class AppoinmentsActivity : AppCompatActivity() {
 
     private fun loadAppointments() {
         val jwt = preferences["jwt", ""]
-        val call = apiService.postAppointments("Bearer $jwt")
+        val call = apiService.getAppointments("Bearer $jwt")
         call.enqueue(object: Callback<ArrayList<Appointment>> {
             override fun onFailure(call: Call<ArrayList<Appointment>>, t: Throwable) {
                 toast(t.localizedMessage)

@@ -1,6 +1,7 @@
 package nain.com.io
 
 import nain.com.io.response.LoginResponse
+import nain.com.io.response.SimpleResponse
 import nain.com.model.Appointment
 import nain.com.model.Doctor
 import nain.com.model.Schedule
@@ -33,9 +34,20 @@ interface ApiService {
     fun postLogout(@Header("Authorization") authHeader: String): Call<Void> // Void pra ignorarlo la respuesta
 
     @GET("appointments")
-    fun postAppointments(@Header("Authorization") authHeader: String)
+    fun getAppointments(@Header("Authorization") authHeader: String)
             : Call<ArrayList<Appointment>> // Void pra ignorarlo la respuesta
 
+    @POST("appointments")
+    @Headers("Accept: application/json")
+    fun storeAppointments(
+        @Header("Authorization") authHeader: String,
+        @Query("description") description: String,
+        @Query("specialty_id") specialtyId: Int,
+        @Query("doctor_id") doctorId: Int,
+        @Query("scheduled_date") scheduledDate: String,
+        @Query("scheduled_time") scheduledTime: String,
+        @Query("type") type: String
+    ) : Call<SimpleResponse> // Void pra ignorarlo la respuesta
 
     // companion para llavar sin la necesidad de factory
     companion object Factory {
