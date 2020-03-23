@@ -55,4 +55,9 @@
     <string name="item_appointment_Created_At">Esta cita se registro el dia %1$s con la siguiente Descripción</string>
     <string name="create_appointment_success">Cita registrada correctamente</string>
     <string name="create_appointment_error">Ocurrio un error en el regsro de cita médica</string>
+    <string name="label_password_confirmation">Confirmar Contraseña</string>
+    <string name="error_register_empty_fields">Por favor completar todos los campos</string>
+    <string name="error_register_passwords_do_not_match">Las contraseñas no coinciden</string>
+    <string name="error_register_validation">Ocurrio un error en el registro</string>
+    <string name="default_notification_channel_id">default_chenel</string>
 </resources>

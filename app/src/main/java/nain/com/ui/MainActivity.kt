@@ -3,8 +3,10 @@ package nain.com.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_main.*
 import nain.com.util.PreferenceHelper
 
@@ -37,10 +39,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //sericios de firebase message
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) {instanceIdResult ->
+            val deviceToken = instanceIdResult.token
+            Log.d("FCMService", deviceToken)
+        }
         // shared preferences
 //        val preferences = getSharedPreferences("geneal", Context.MODE_PRIVATE)
 //        val session = preferences.getBoolean("session", false) // el false se pondra cuando no exista sesion en el storage
-
 //        if (session) {
         val preferences = PreferenceHelper.defaultPrefs(this)
 //        if(preferences["success", false]){
@@ -94,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                         // si nos devuelve true el servidor
                         createSessionPreferences(loginResponse.jwt)
                         // con la informacion del usuario almacenarla o imprimirla
-                        toast(getString(R.string.welcome_name, loginResponse.user.email))
+                        toast(getString(R.string.welcome_name, loginResponse.user.name))
                         goToMenuActivity()
                     }else {
                         toast(getString(R.string.error_invalid_credentials))

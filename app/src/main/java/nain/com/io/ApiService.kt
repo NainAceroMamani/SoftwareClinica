@@ -47,7 +47,17 @@ interface ApiService {
         @Query("scheduled_date") scheduledDate: String,
         @Query("scheduled_time") scheduledTime: String,
         @Query("type") type: String
-    ) : Call<SimpleResponse> // Void pra ignorarlo la respuesta
+    ) : Call<SimpleResponse>
+
+
+    @POST("register")
+    @Headers("Accept: application/json")
+    fun postRegister(
+        @Query("name") name: String,
+        @Query("email") email: String,
+        @Query("password") password: String,
+        @Query("password_confirmation") passwordConfirmation: String
+    ) : Call<LoginResponse>
 
     // companion para llavar sin la necesidad de factory
     companion object Factory {

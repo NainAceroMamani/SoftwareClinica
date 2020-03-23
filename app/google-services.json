@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "866065409236",
+    "firebase_url": "https://linear-facet-242401.firebaseio.com",
+    "project_id": "linear-facet-242401",
+    "storage_bucket": "linear-facet-242401.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866065409236:android:6667d31cce5ab7fe2b4741",
+        "android_client_info": {
+          "package_name": "nain.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "866065409236-8qpd7sb0utg06gi7s5thsqas4kvep2mt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBybFqp-GTSxAzTxqB2rHF8No3gyrfeDFE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "866065409236-8qpd7sb0utg06gi7s5thsqas4kvep2mt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
