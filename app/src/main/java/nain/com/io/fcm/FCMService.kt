@@ -12,13 +12,51 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import nain.com.R
+import nain.com.io.ApiService
 import nain.com.ui.MainActivity
+import nain.com.util.PreferenceHelper
+import nain.com.util.PreferenceHelper.get
+import nain.com.util.toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class FCMService : FirebaseMessagingService() {
-    // genrar un nuevo Token
+    private val apiService by lazy {
+        ApiService.create()
+    }
+
+    private val preferences by lazy {
+        PreferenceHelper.defaultPrefs(this)
+    }
+    // genrar un nuevo Token Cuando fireabse nos cambia el token de usuario y no se cierra sesión pues tambien lo actualizamos en la api
+    // este metodo ctr + o
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
+
+        val jwt = preferences["jwt", ""]
+
+        if(jwt.isEmpty())
+            return
+
+        val authHeader= "Bearer $jwt"
+
+        val call = apiService.postToken(authHeader, newToken)
+        call.enqueue(object: Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                toast(t.localizedMessage)
+            }
+
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if(response.isSuccessful) {
+                    Log.d(TAG, "Token registrado correctamente")
+                } else {
+                    Log.d(TAG, "Hubo un problema al registro del Token")
+                }
+            }
+
+        })
     }
 
     /**
@@ -27,6 +65,7 @@ class FCMService : FirebaseMessagingService() {
          * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
          */
         override fun onMessageReceived(remoteMessage: RemoteMessage) {
+            // Se ejecuta cuando la aplicación esta abierta
             // There are two types of messages data messages and notification messages. Data messages are handled
             // here in onMessageReceived whether the app is in the foreground or background. Data messages are the type
             // traditionally used with GCM. Notification messages are only received here in onMessageReceived when the app
@@ -46,7 +85,16 @@ class FCMService : FirebaseMessagingService() {
 
             // Check if message contains a notification payload.
             remoteMessage.notification.let {
-                Log.d(TAG, "Message Notification Body: " + remoteMessage.notification?.body)
+                // si viene vacio el titulo del notification mostramos el nombre del app
+                val title = remoteMessage.notification?.title ?: getString(R.string.app_name)
+                val body = remoteMessage.notification?.body
+
+                // si el cuerpo de la notificación no esta vacia la mostramos
+                if(body != null)
+                        sendNotification(title, body)
+
+//                Log.d(TAG, "Notification Title: " + remoteMessage.notification?.title)
+//                Log.d(TAG, "Notification Body: " + remoteMessage.notification?.body)
             }
 
             // sendNotification()
@@ -65,7 +113,7 @@ class FCMService : FirebaseMessagingService() {
          *
          * @param messageBody FCM message body received.
          */
-        private fun sendNotification(messageBody: String) {
+        private fun sendNotification(messageTitle: String,messageBody: String) {
             val intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             val pendingIntent = PendingIntent.getActivity(
@@ -77,7 +125,7 @@ class FCMService : FirebaseMessagingService() {
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val notificationBuilder = NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.drawable.ic_schedule)
-                .setContentTitle("FCM Message")
+                .setContentTitle(messageTitle)
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

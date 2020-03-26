@@ -60,4 +60,12 @@
     <string name="error_register_passwords_do_not_match">Las contraseñas no coinciden</string>
     <string name="error_register_validation">Ocurrio un error en el registro</string>
     <string name="default_notification_channel_id">default_chenel</string>
+    <string name="btn_edit_profile">Editar perfil</string>
+    <string name="label_label_edit_profile">Editar datos básicos</string>
+    <string name="label_phone">Número de teléfono</string>
+    <string name="label_direccion">Dirección</string>
+    <string name="btn_save">Guardar Cambios</string>
+    <string name="profile_success_message">Los cambios se han guardado correctamente</string>
+    <string name="error_profile_name">El nombre ingresado es demasiado corto.</string>
+    <string name="you_need_a_phone">Es necesario asociar primero un teléfono a tu cuenta</string>
 </resources>

@@ -2,10 +2,7 @@ package nain.com.io
 
 import nain.com.io.response.LoginResponse
 import nain.com.io.response.SimpleResponse
-import nain.com.model.Appointment
-import nain.com.model.Doctor
-import nain.com.model.Schedule
-import nain.com.model.Specialty
+import nain.com.model.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -14,6 +11,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 interface ApiService {
+
+    @GET("user")
+    @Headers("Accept: application/json")
+    fun getUser(@Header("Authorization") authHeader: String): Call<User>
+
+    @POST("user")
+    @Headers("Accept: application/json")
+    fun postUser(
+        @Header("Authorization") authHeader: String,
+        @Query("name") name: String,
+        @Query("phone") phone: String,
+        @Query("address") address: String
+    ): Call<Void>
 
     @GET("specialties") // anotacion de la clase abstracta gracias a retrofic
     fun getSpecialties(): Call<ArrayList<Specialty>>
@@ -58,6 +68,12 @@ interface ApiService {
         @Query("password") password: String,
         @Query("password_confirmation") passwordConfirmation: String
     ) : Call<LoginResponse>
+
+    @POST("fcm/token")
+    fun postToken(
+        @Header("Authorization") authHeader: String,
+        @Query("device_token") token: String
+    ) : Call<Void>
 
     // companion para llavar sin la necesidad de factory
     companion object Factory {

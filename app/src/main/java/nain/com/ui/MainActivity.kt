@@ -1,21 +1,18 @@
 package nain.com.ui
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.iid.FirebaseInstanceId
-import kotlinx.android.synthetic.main.activity_main.*
-import nain.com.util.PreferenceHelper
-
 // necesario para que funcione
-import nain.com.util.PreferenceHelper.get
-import nain.com.util.PreferenceHelper.set
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 import nain.com.R
 import nain.com.io.ApiService
 import nain.com.io.response.LoginResponse
+import nain.com.util.PreferenceHelper
+import nain.com.util.PreferenceHelper.get
+import nain.com.util.PreferenceHelper.set
 import nain.com.util.toast
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,11 +36,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //sericios de firebase message
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this) {instanceIdResult ->
-            val deviceToken = instanceIdResult.token
-            Log.d("FCMService", deviceToken)
-        }
         // shared preferences
 //        val preferences = getSharedPreferences("geneal", Context.MODE_PRIVATE)
 //        val session = preferences.getBoolean("session", false) // el false se pondra cuando no exista sesion en el storage
@@ -101,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                         createSessionPreferences(loginResponse.jwt)
                         // con la informacion del usuario almacenarla o imprimirla
                         toast(getString(R.string.welcome_name, loginResponse.user.name))
-                        goToMenuActivity()
+                        goToMenuActivity(true)
                     }else {
                         toast(getString(R.string.error_invalid_credentials))
                     }
@@ -114,8 +106,15 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun goToMenuActivity() {
+    private fun goToMenuActivity(isUserInput: Boolean = false) {
+        // cuando iniciamos secion le cambiamos el token Firebase
         val intent = Intent(this, MenuActivity::class.java)
+        // pasar de un valor extra a  otro activity pasamos parametros
+        if(isUserInput) {
+            intent.putExtra("store_token", true)
+        }
+
+        // FIn FCM
         startActivity(intent)
         finish()
     }

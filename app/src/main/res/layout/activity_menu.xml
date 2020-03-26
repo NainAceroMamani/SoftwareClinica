@@ -20,6 +20,13 @@
         android:textColor="@color/white" />
 
     <Button
+        android:id="@+id/btnProfile"
+        style="@style/MenuButton"
+        android:layout_width="match_parent"
+        android:drawableStart="@drawable/ic_profile"
+        android:text="@string/btn_edit_profile" />
+
+    <Button
         android:id="@+id/btnCreateAppointment"
         style="@style/MenuButton"
         android:layout_width="match_parent"
